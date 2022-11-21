@@ -11,7 +11,7 @@ export default function Records() {
                         <div className="date">18/11</div>
                         <div className="description">Título</div>
                     </div>
-                    <div className="value">300</div>
+                    <div className="value">434300</div>
                 </div>
             </Extract>
 

@@ -1,15 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Records from "../../components/Records";
 
 export default function Main() {
+    const navigate = useNavigate();
     return (
         <Page>
             <div className="top">
                 <h1>Olá, Fulano</h1>
-                <Link to="/">
-                    <ion-icon name="log-out-outline"></ion-icon>
-                </Link>
+            
+                <ion-icon name="log-out-outline" onClick={() => {
+                    localStorage.clear();
+                    navigate("/");
+                }}></ion-icon>
+                
             </div>
 
             <Records />

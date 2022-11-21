@@ -1,44 +1,94 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../../components/Logo";
+import { postSignUp } from "../../service/myWalletService";
 
 export default function SignUp() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const navigate = useNavigate();
+
+    function sendForm(e) {
+        e.preventDefault();
+
+        const body = {
+            name,
+            email,
+            password,
+            confirmPassword
+        }
+
+        if(password !== confirmPassword) {
+            setPassword("");
+            setConfirmPassword("");
+            alert("Senhas não conferem. Digite novamente.");
+        }
+
+        postSignUp(body) 
+            .then(() => {
+                resetForm();
+                navigate("/");
+            })
+            .catch((err) => {
+                resetForm();
+                alert("Algo deu errado. Tente novamente.");
+                console.log(err);
+            });
+    }
+
+    function resetForm() {
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+    }
+
     return (
         <RegisterContainer>
             <Logo />
 
-            <form>
+            <form onSubmit={sendForm}>
                 <input
                     placeholder="Nome"
                     type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                 />
 
                 <input
                     placeholder="E-mail"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                 />
 
                 <input
                     placeholder="Senha"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                 />
 
                 <input
                     placeholder="Confirme a senha"
                     type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                 />
 
-                <Link to="/mainpage">
-                    <div className="button-signup">
-                        <button>
-                            Cadastrar
-                        </button>
-                    </div>
-                </Link>
+                <div className="button-signup">
+                    <button>
+                        Cadastrar
+                    </button>
+                </div>
             </form>
 
             <Link to="/">

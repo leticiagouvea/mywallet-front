@@ -91,10 +91,11 @@ button {
     font-weight: 700;
     cursor: pointer;
     transition: linear 0.4s;
+    box-shadow: 3px 3px 1px #700c9b;
         &:hover {
-            border: 1px solid #000;
+            border: 1px solid #000000;
             box-shadow: 3px 3px 1px #4492DA;
-            border-radius: 20px 20px 0px 20px;
+            border-radius: 15px 15px 0px 15px;
         }
 }
 `
