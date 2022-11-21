@@ -6,7 +6,6 @@ import { NewValueContainer } from "./NewInput";
 
 export default function UpdateInput() {
     const { cash, setCash, text, setText, id } = useContext(UserContext);
-    console.log(id);
 
     const navigate = useNavigate();
 

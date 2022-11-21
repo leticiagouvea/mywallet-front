@@ -6,7 +6,6 @@ import { NewValueContainer } from "./NewInput";
 
 export default function UpdateOutput() {
     const { cash, setCash, text, setText, id } = useContext(UserContext);
-    console.log(id);
 
     const navigate = useNavigate();
 
@@ -26,7 +25,7 @@ export default function UpdateOutput() {
             .catch((err) => {
                 resetForm();
                 console.log(err);
-                alert("Algo deu errado. Tente novamente.")
+                alert("Algo deu errado. Tente novamente.");
             })
     }
 

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Records from "../../components/Records";
@@ -68,7 +67,7 @@ const Page = styled.div`
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        padding-bottom: 100px;
+        padding-bottom: 50px;
 
         .new-record {
             width: 155px;
