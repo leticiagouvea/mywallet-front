@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getValues } from "../service/myWalletService";
 import styled from "styled-components";
+import UserContext from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Records() {
     const [values, setValues] = useState([]);
+    const { setId } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         getValues()
@@ -33,10 +38,23 @@ export default function Records() {
                             {values.map((value, index) => (
                                 <Record key={index} type={value.type}>
                                     <div className="left">
-                                        <div className="date">{value.date}</div>
-                                        <div className="description">{value.text}</div>
+                                        <span className="date">{value.date}</span>
+                                        <span className="description" onClick={() => {
+                                            setId(value._id);
+
+                                            if (value.type === "input") {
+                                                navigate("/update-input");
+                                            } else {
+                                                navigate("/update-output");
+                                            }
+                                        }}>
+                                            {value.text}
+                                        </span>
                                     </div>
-                                    <div className="value">{value.value.toFixed(2)}</div>
+                                    <div className="right">
+                                        <span className="value">{value.value.toFixed(2)}</span>
+                                        <span className="delete">x</span>
+                                    </div>
                                 </Record>
                             ))}
                         </Extract>
@@ -108,12 +126,23 @@ const Record = styled.div`
         color: ${props => props.type === "input" ? ("#03AC00") : ("#C70000")}
     }
 
-    .left {
+    .left, .right {
         display: flex;
+    }
+
+    .description {
+        cursor: pointer;
     }
 
     .date {
         color: #C6C6C6;
         margin-right: 8px;
+    }
+
+    .delete {
+        color: #C6C6C6;
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: 700;
     }
 `

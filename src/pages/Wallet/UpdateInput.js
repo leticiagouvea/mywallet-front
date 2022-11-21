@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import { postValue } from "../../service/myWalletService";
+import { updateValue } from "../../service/myWalletService";
 import { NewValueContainer } from "./NewInput";
 
-export default function NewOutput() {
-    const { cash, setCash, text, setText } = useContext(UserContext);
+export default function UpdateInput() {
+    const { cash, setCash, text, setText, id } = useContext(UserContext);
+    console.log(id);
 
     const navigate = useNavigate();
 
@@ -14,11 +15,10 @@ export default function NewOutput() {
 
         const body = {
             value: Number(cash),
-            text,
-            type: "output"
+            text
         }
 
-        postValue(body)
+        updateValue(id, body)
             .then(() => {
                 resetForm();
                 navigate("/wallet");
@@ -38,7 +38,7 @@ export default function NewOutput() {
     return (
         <NewValueContainer>
             <div className="top">
-                <h1>Nova saída</h1>
+                <h1>Editar entrada</h1>
 
                 <ion-icon name="return-down-forward-outline" onClick={() => {
                     resetForm();
@@ -63,7 +63,7 @@ export default function NewOutput() {
                     required
                 />
 
-                <button>Salvar saída</button>
+                <button>Atualizar entrada</button>
             </form>
         </NewValueContainer>
     )

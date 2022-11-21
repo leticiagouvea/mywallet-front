@@ -7,7 +7,6 @@ export default function Main() {
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
 
     return (
         <Page>

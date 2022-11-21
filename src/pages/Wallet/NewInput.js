@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import UserContext from "../../context/UserContext";
 import { postValue } from "../../service/myWalletService";
@@ -36,12 +36,14 @@ export default function NewInput() {
     }
 
     return (
-        <NewInputContainer>
+        <NewValueContainer>
             <div className="top">
                 <h1>Nova entrada</h1>
-                <Link to="/wallet">
-                    <ion-icon name="return-down-forward-outline"></ion-icon>
-                </Link>
+                
+                <ion-icon name="return-down-forward-outline" onClick={() => {
+                    resetForm();
+                    navigate("/wallet");
+                }}></ion-icon>
             </div>
 
             <form onSubmit={sendForm}>
@@ -63,11 +65,11 @@ export default function NewInput() {
 
                 <button>Salvar entrada</button>
             </form>
-        </NewInputContainer>
+        </NewValueContainer>
     )
 }
 
-const NewInputContainer = styled.div`
+const NewValueContainer = styled.div`
     min-width: 375px;
     display: flex;
     flex-direction: column;
@@ -92,3 +94,4 @@ const NewInputContainer = styled.div`
         }
     }
 `
+export { NewValueContainer };
