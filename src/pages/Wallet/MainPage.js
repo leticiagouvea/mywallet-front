@@ -6,7 +6,8 @@ import Records from "../../components/Records";
 export default function Main() {
     const navigate = useNavigate();
 
-    const user = JSON.parse(localStorage.getItem("name"));
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
 
     return (
         <Page>
@@ -23,14 +24,14 @@ export default function Main() {
             <Records />
 
             <div className="buttons">
-                <Link to="/newentry">
+                <Link to="/new-input">
                     <button className="new-record">
                         <ion-icon name="add-circle-outline"></ion-icon>
                         <p>Nova <br /> entrada</p>
                     </button>
                 </Link>
 
-                <Link to="/newexit">
+                <Link to="/new-output">
                     <button className="new-record">
                         <ion-icon name="remove-circle-outline"></ion-icon>
                         <p>Nova <br /> saída</p>

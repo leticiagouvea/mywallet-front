@@ -1,36 +1,73 @@
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import UserContext from "../../context/UserContext";
+import { postValue } from "../../service/myWalletService";
 
-export default function NewEntry() {
+export default function NewInput() {
+    const { cash, setCash, text, setText } = useContext(UserContext);
+
+    const navigate = useNavigate();
+
+    function sendForm(e) {
+        e.preventDefault();
+
+        const body = {
+            value: Number(cash),
+            text,
+            type: "input"
+        }
+
+        postValue(body)
+            .then(() => {
+                resetForm();
+                navigate("/wallet");
+            })
+            .catch((err) => {
+                resetForm();
+                console.log(err);
+                alert("Algo deu errado. Tente novamente.")
+            })
+    }
+
+    function resetForm() {
+        setCash("");
+        setText("");
+    }
+
     return (
-        <NewEntryContainer>
+        <NewInputContainer>
             <div className="top">
                 <h1>Nova entrada</h1>
-                <Link to="/mainpage">
+                <Link to="/wallet">
                     <ion-icon name="return-down-forward-outline"></ion-icon>
                 </Link>
             </div>
 
-            <form>
+            <form onSubmit={sendForm}>
                 <input
                     placeholder="Valor"
                     type="number"
+                    value={cash}
+                    onChange={(e) => setCash(e.target.value)}
                     required
                 />
 
                 <input
                     placeholder="Descrição"
                     type="text"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
                     required
                 />
 
                 <button>Salvar entrada</button>
             </form>
-        </NewEntryContainer>
+        </NewInputContainer>
     )
 }
 
-const NewEntryContainer = styled.div`
+const NewInputContainer = styled.div`
     min-width: 375px;
     display: flex;
     flex-direction: column;

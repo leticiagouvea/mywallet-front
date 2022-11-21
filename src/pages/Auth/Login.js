@@ -12,7 +12,6 @@ export default function Login() {
 
     function sendForm(e) {
         e.preventDefault();
-        console.log(email, password)
 
         const body = {
             email,

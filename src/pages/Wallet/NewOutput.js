@@ -1,36 +1,73 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import UserContext from "../../context/UserContext";
+import { postValue } from "../../service/myWalletService";
 
-export default function NewExit() {
+export default function NewOutput() {
+    const { cash, setCash, text, setText } = useContext(UserContext);
+
+    const navigate = useNavigate();
+
+    function sendForm(e) {
+        e.preventDefault();
+
+        const body = {
+            value: Number(cash),
+            text,
+            type: "output"
+        }
+
+        postValue(body)
+            .then(() => {
+                resetForm();
+                navigate("/wallet");
+            })
+            .catch((err) => {
+                resetForm();
+                console.log(err);
+                alert("Algo deu errado. Tente novamente.")
+            })
+    }
+
+    function resetForm() {
+        setCash("");
+        setText("");
+    }
+
     return (
-        <NewExitContainer>
+        <NewOutputContainer>
             <div className="top">
                 <h1>Nova saída</h1>
-                <Link to="/mainpage">
+                <Link to="/wallet">
                     <ion-icon name="return-down-forward-outline"></ion-icon>
                 </Link>
             </div>
 
-            <form>
+            <form onSubmit={sendForm}>
                 <input
                     placeholder="Valor"
                     type="number"
+                    value={cash}
+                    onChange={(e) => setCash(e.target.value)}
                     required
                 />
 
                 <input
                     placeholder="Descrição"
                     type="text"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
                     required
                 />
 
                 <button>Salvar saída</button>
             </form>
-        </NewExitContainer>
+        </NewOutputContainer>
     )
 }
 
-const NewExitContainer = styled.div`
+const NewOutputContainer = styled.div`
     min-width: 375px;
     display: flex;
     flex-direction: column;
