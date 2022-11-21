@@ -1,13 +1,17 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Records from "../../components/Records";
 
 export default function Main() {
     const navigate = useNavigate();
+
+    const user = JSON.parse(localStorage.getItem("name"));
+
     return (
         <Page>
             <div className="top">
-                <h1>Olá, Fulano</h1>
+                <h1>Olá, {user}</h1>
             
                 <ion-icon name="log-out-outline" onClick={() => {
                     localStorage.clear();

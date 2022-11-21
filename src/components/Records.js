@@ -1,23 +1,51 @@
+import { useEffect, useState } from "react";
+import { getValues } from "../service/myWalletService";
 import styled from "styled-components";
 
 export default function Records() {
+    const [values, setValues] = useState([]);
+
+    useEffect(() => {
+        getValues()
+            .then((res) => setValues(res.data))
+            .catch((err) => {
+                console.log(err);
+                alert("Algo deu errado.");
+            })
+    }, [values]);
+
+    const input = values
+        .filter(sum => sum.type === "input")
+        .reduce((total, value) => total + value.value, 0);
+
+    const output = values
+        .filter(sum => sum.type === "output")
+        .reduce((total, value) => total + value.value, 0);
+
+    const total = input - output;
+
     return (
         <ContainerRecords>
-            {/* <h1>Não há registros de entrada ou saída</h1> */}
+            {
+                values.length === 0 ? (<h1>Não há registros de entrada ou saída</h1>) :
+                    (
+                        <Extract>
+                            {values.map((value, index) => (
+                                <Record key={index} type={value.type}>
+                                    <div className="left">
+                                        <div className="date">{value.date}</div>
+                                        <div className="description">{value.text}</div>
+                                    </div>
+                                    <div className="value">{value.value.toFixed(2)}</div>
+                                </Record>
+                            ))}
+                        </Extract>
+                    )
+            }
 
-            <Extract>
-                <div className="record">
-                    <div className="left">
-                        <div className="date">18/11</div>
-                        <div className="description">Título</div>
-                    </div>
-                    <div className="value">434300</div>
-                </div>
-            </Extract>
-
-            <Balance>
+            <Balance total={total}>
                 <p>Saldo</p>
-                <p>R$ 3547</p>
+                <p className="value-balance">{total.toFixed(2)}</p>
             </Balance>
         </ContainerRecords>
     )
@@ -54,6 +82,10 @@ const Balance = styled.div`
     position: absolute;
     bottom: 15px;
     left: 14px;
+
+    .value-balance {
+        color: ${props => props.total > 0 ? ("#03AC00") : ("#C70000")}
+    }
 `
 
 const Extract = styled.div`
@@ -65,11 +97,15 @@ const Extract = styled.div`
     overflow-y: scroll;
     padding: 15px;
     margin: 0 auto;
+`
 
-    .record {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
+const Record = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    .value {
+        color: ${props => props.type === "input" ? ("#03AC00") : ("#C70000")}
     }
 
     .left {
@@ -79,13 +115,5 @@ const Extract = styled.div`
     .date {
         color: #C6C6C6;
         margin-right: 8px;
-    }
-
-    .green {
-        color: #03AC00;
-    }
-    
-    .red {
-        color: #C70000;
     }
 `
