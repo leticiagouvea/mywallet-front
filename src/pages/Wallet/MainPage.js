@@ -53,6 +53,7 @@ const Page = styled.div`
         margin: 0 auto;
 
         h1 {
+            width: 290px;
             font-size: 26px;
         }
 

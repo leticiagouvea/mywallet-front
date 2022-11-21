@@ -5,78 +5,81 @@ import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Records() {
-   const [values, setValues] = useState([]);
-   const { setId } = useContext(UserContext);
+  const [values, setValues] = useState([]);
+  const { setId } = useContext(UserContext);
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-   useEffect(() => {
-      getValues()
-         .then((res) => setValues(res.data))
-         .catch((err) => {
-            console.log(err);
-            alert("Algo deu errado.");
-         })
-   }, [values]);
+  useEffect(() => {
+    getValues()
+      .then((res) => setValues(res.data))
+      .catch((err) => {
+        console.log(err);
+        alert("Algo deu errado.");
+      })
+  }, [values]);
 
-   const input = values
-      .filter(sum => sum.type === "input")
-      .reduce((total, value) => total + value.value, 0);
+  const input = values
+    .filter(sum => sum.type === "input")
+    .reduce((total, value) => total + value.value, 0);
 
-   const output = values
-      .filter(sum => sum.type === "output")
-      .reduce((total, value) => total + value.value, 0);
+  const output = values
+    .filter(sum => sum.type === "output")
+    .reduce((total, value) => total + value.value, 0);
 
-   const total = input - output;
+  const total = input - output;
 
-   return (
-      <ContainerRecords>
-         {
-            values.length === 0 ? (<h1>Não há registros de entrada ou saída</h1>) :
-               (
-                  <Extract>
-                     {values.map((value, index) => (
-                        <Record key={index} type={value.type}>
-                           <div className="left">
-                              <span className="date">{value.date}</span>
-                              <span className="description" onClick={() => {
-                                 setId(value._id);
+  return (
+    <ContainerRecords>
+      {
+        values.length === 0 ? (<h1>Não há registros de entrada ou saída</h1>) :
+         (
+            <Extract>
+              {values.map((value, index) => (
+                <Record key={index} type={value.type}>
+                  <div className="left">
+                    <span className="date">{value.date}</span>
+                    <span className="description">{value.text}</span>
+                  </div>
 
-                                 if (value.type === "input") {
-                                    navigate("/update-input");
-                                 } else {
-                                    navigate("/update-output");
-                                 }
-                              }}>{value.text}</span>
-                           </div>
+                  <div className="right">
+                    <span className="value">{value.value.toFixed(2)}</span>
 
-                           <div className="right">
-                              <span className="value">{value.value.toFixed(2)}</span>
-                              <span className="delete" onClick={() => {
-                                 const confirm = window.confirm("Deseja excluir esse valor?");
+                    <ion-icon name="close-outline" onClick={() => {
+                      const confirm = window.confirm("Deseja excluir esse valor?");
 
-                                 if (confirm) {
-                                    deleteValue(value._id)
-                                       .then(() => alert("Valor excluído com sucesso!"))
-                                       .catch((err) => {
-                                          console.log(err);
-                                          alert("Não foi possível apagar o valor.");
-                                       })
-                                 }
-                              }}>x</span>
-                           </div>
-                        </Record>
-                     ))}
-                  </Extract>
-               )
-         }
+                      if (confirm) {
+                        deleteValue(value._id)
+                          .then(() => alert("Valor excluído com sucesso!"))
+                          .catch((err) => {
+                            console.log(err);
+                            alert("Não foi possível apagar o valor.");
+                          })
+                      }
+                    }}></ion-icon>
 
-         <Balance total={total}>
-            <span>Saldo</span>
-            <span className="value-balance">{total.toFixed(2)}</span>
-         </Balance>
-      </ContainerRecords>
-   )
+                    <ion-icon name="create-outline" onClick={() => {
+                      setId(value._id);
+
+                      if (value.type === "input") {
+                        navigate("/update-input");
+                      } else {
+                        navigate("/update-output");
+                      }
+                    }}></ion-icon>
+                  </div>
+                </Record>
+              ))}
+            </Extract>
+         )
+      }
+
+      <Balance total={total}>
+        <span>Saldo</span>
+        <span className="value-balance">{total.toFixed(2)}</span>
+      </Balance>
+    </ContainerRecords>
+  )
 }
 
 const ContainerRecords = styled.div`
@@ -87,6 +90,7 @@ const ContainerRecords = styled.div`
   margin-bottom: 10px;
   position: relative;
   background: linear-gradient(180deg, white 65%, #87c0f2 100%);
+  line-height: 1.4;
 
   h1 {
     width: 180px;
@@ -97,7 +101,6 @@ const ContainerRecords = styled.div`
     position: absolute;
     left: 70px;
     top: 180px;
-    line-height: 1.4;
   }
 `
 
@@ -117,7 +120,7 @@ const Balance = styled.div`
 `
 
 const Extract = styled.div`
-  width: 320px;
+  width: 326px;
   height: 340px;
   font-weight: 400;
   font-size: 16px;
@@ -138,10 +141,11 @@ const Record = styled.div`
 
   .left, .right {
     display: flex;
+    align-items: center;
   }
 
   .description {
-    cursor: pointer;
+    width: 120px;
     font-size: 15px;
   }
 
@@ -150,10 +154,14 @@ const Record = styled.div`
     margin-right: 8px;
   }
 
-  .delete {
-    color: #C6C6C6;
-    margin-left: 8px;
-    cursor: pointer;
-    font-weight: 700;
+  ion-icon {
+   color: #C6C6C6;
+   margin-left: 4px;
+   cursor: pointer;
+   font-size: 18px;
+   transition: all 0.2s;
+   &:hover {
+      color: #000000;
+   }
   }
 `

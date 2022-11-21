@@ -53,7 +53,7 @@ export default function SignUp() {
 
             <form onSubmit={sendForm}>
                 <input
-                    placeholder="Nome"
+                    placeholder="Primeiro nome"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
