@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ThreeDots } from 'react-loader-spinner';
 import styled from "styled-components";
 import Logo from "../../components/Logo";
 import { postLogin } from "../../service/myWalletService";
@@ -7,11 +8,13 @@ import { postLogin } from "../../service/myWalletService";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     function sendForm(e) {
         e.preventDefault();
+        setLoading(true);
 
         const body = {
             email,
@@ -24,11 +27,13 @@ export default function Login() {
                 localStorage.setItem("user", JSON.stringify(res.data.name));
                 localStorage.setItem("token", JSON.stringify(res.data.token));
                 navigate("/wallet");
+                setLoading(false);
             })
             .catch((err) => {
                 resetForm();
                 alert("Algo deu errado. Tente novamente.");
                 console.log(err);
+                setLoading(false);
             })
     }
 
@@ -48,6 +53,7 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <input
@@ -56,11 +62,14 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <div className="button-login">
-                    <button>
-                        Entrar
+                    <button disabled={loading}>
+                        {loading ?
+                            (<ThreeDots color="#ffffff" height={40} width={40} />) :
+                            ("Entrar")}
                     </button>
                 </div>
             </form>
@@ -95,6 +104,16 @@ const LoginContainer = styled.div`
 
     form {
         margin-top: 30px;
+    }
+
+    button {
+        &:disabled {
+        opacity: 0.7;
+        cursor: default;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
     }
 
     h2 {

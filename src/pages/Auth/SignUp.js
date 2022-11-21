@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ThreeDots } from 'react-loader-spinner';
 import styled from "styled-components";
 import Logo from "../../components/Logo";
 import { postSignUp } from "../../service/myWalletService";
@@ -9,11 +10,13 @@ export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     function sendForm(e) {
         e.preventDefault();
+        setLoading(true);
 
         const body = {
             name,
@@ -32,11 +35,13 @@ export default function SignUp() {
             .then(() => {
                 resetForm();
                 navigate("/");
+                setLoading(false);
             })
             .catch((err) => {
                 resetForm();
                 alert("Algo deu errado. Tente novamente.");
                 console.log(err);
+                setLoading(false);
             });
     }
 
@@ -58,6 +63,7 @@ export default function SignUp() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <input
@@ -66,6 +72,7 @@ export default function SignUp() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <input
@@ -74,6 +81,7 @@ export default function SignUp() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <input
@@ -82,11 +90,14 @@ export default function SignUp() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <div className="button-signup">
-                    <button>
-                        Cadastrar
+                    <button disabled={loading}>
+                        {loading ?
+                            (<ThreeDots color="#ffffff" height={40} width={40} />) :
+                            ("Cadastrar")}
                     </button>
                 </div>
             </form>
@@ -121,6 +132,16 @@ const RegisterContainer = styled.div`
 
     form {
         margin-top: 30px;
+    }
+
+    button {
+        &:disabled {
+        opacity: 0.7;
+        cursor: default;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
     }
 
     h2 {

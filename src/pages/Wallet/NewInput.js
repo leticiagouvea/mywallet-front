@@ -1,16 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ThreeDots } from 'react-loader-spinner';
 import styled from "styled-components";
 import UserContext from "../../context/UserContext";
 import { postValue } from "../../service/myWalletService";
 
 export default function NewInput() {
     const { cash, setCash, text, setText } = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     function sendForm(e) {
         e.preventDefault();
+        setLoading(true);
 
         const body = {
             value: Number(cash),
@@ -22,11 +25,13 @@ export default function NewInput() {
             .then(() => {
                 resetForm();
                 navigate("/wallet");
+                setLoading(false);
             })
             .catch((err) => {
                 resetForm();
                 console.log(err);
-                alert("Algo deu errado. Tente novamente.")
+                alert("Algo deu errado. Tente novamente.");
+                setLoading(false);
             })
     }
 
@@ -53,6 +58,7 @@ export default function NewInput() {
                     value={cash}
                     onChange={(e) => setCash(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <input
@@ -61,9 +67,14 @@ export default function NewInput() {
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
-                <button>Salvar entrada</button>
+                <button disabled={loading}>
+                    {loading ?
+                        (<ThreeDots color="#ffffff" height={40} width={40} />) :
+                        ("Salvar entrada")}
+                </button>
             </form>
         </NewValueContainer>
     )
@@ -91,6 +102,16 @@ const NewValueContainer = styled.div`
         ion-icon {
             font-size: 26px;
             cursor: pointer;
+        }
+    }
+
+    button {
+        &:disabled {
+        opacity: 0.7;
+        cursor: default;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         }
     }
 `

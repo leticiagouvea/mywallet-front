@@ -1,16 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ThreeDots } from 'react-loader-spinner';
 import UserContext from "../../context/UserContext";
 import { updateValue } from "../../service/myWalletService";
 import { NewValueContainer } from "./NewInput";
 
 export default function UpdateInput() {
     const { cash, setCash, text, setText, id } = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     function sendForm(e) {
         e.preventDefault();
+        setLoading(true);
 
         const body = {
             value: Number(cash),
@@ -21,11 +24,13 @@ export default function UpdateInput() {
             .then(() => {
                 resetForm();
                 navigate("/wallet");
+                setLoading(false);
             })
             .catch((err) => {
                 resetForm();
                 console.log(err);
-                alert("Algo deu errado. Tente novamente.")
+                alert("Algo deu errado. Tente novamente.");
+                setLoading(false);
             })
     }
 
@@ -52,6 +57,7 @@ export default function UpdateInput() {
                     value={cash}
                     onChange={(e) => setCash(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
                 <input
@@ -60,9 +66,14 @@ export default function UpdateInput() {
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     required
+                    disabled={loading}
                 />
 
-                <button>Atualizar entrada</button>
+                <button disabled={loading}>
+                    {loading ?
+                        (<ThreeDots color="#ffffff" height={40} width={40} />) :
+                        ("Atualizar entrada")}
+                </button>
             </form>
         </NewValueContainer>
     )
